@@ -68,6 +68,7 @@ def recommend(file, price, cuisines_list):
     # We're done!  Return that sorted list.
     return result
 
+
 def build_rating_list(name_to_rating, names_final):
     """ (dict of {str: int}, list of str) -> list of list of [int, str]
 
@@ -81,6 +82,7 @@ def build_rating_list(name_to_rating, names_final):
     >>> names = ['Queen St. Cafe', 'Dumplings R Us']
     [[82, 'Queen St. Cafe'], [71, 'Dumplings R Us']]
     """
+
 
 def filter_by_cuisine(names_matching_price, cuisine_to_names, cuisines_list):
     """ (list of str, dict of {str: list of str}, list of str) -> list of str
@@ -97,6 +99,7 @@ def filter_by_cuisine(names_matching_price, cuisine_to_names, cuisines_list):
     ['Queen St. Cafe', 'Dumplings R Us']
     """
 
+
 def read_restaurants(file):
     """ (file) -> (dict, dict, dict)
 
@@ -107,15 +110,33 @@ def read_restaurants(file):
     - a dict of {cusine: list of restaurant names}
     """
 
-
-    price_to_names = {'$': [], '$$': [], '$$$': [], '$$$$': []}
-    cuisine_to_names = {}
-
     with open(file) as f:
         file_list = f.read().splitlines()
 
+    # extract resaurant details in order from file_list
     restaurant_names = file_list[::5]
     restaurant_ratings = file_list[1::5]
+    restaurant_prices = file_list[2::5]
+    restaurant_cuisines = [item.split(',') for item in file_list[3::5]]
+
+    # create dict of {restaurant name: rating%}
     name_to_rating = dict(zip(restaurant_names, restaurant_ratings))
 
-    return name_to_rating
+    # create dict of {price: list of restaurant names}
+    price_to_names = {'$': [], '$$': [], '$$$': [], '$$$$': []}
+    restaurant_price_tuples = list(zip(restaurant_names, restaurant_prices))
+    for restaurant in restaurant_price_tuples:
+        price_to_names[restaurant[1]].append(restaurant[0])
+
+    # create dict of {cusine: list of restaurant names}
+    cuisine_to_names = {}
+    restaurant_cuisine_tuples = list(zip(restaurant_names,
+                                         restaurant_cuisines))
+    for r in restaurant_cuisine_tuples:
+        for c in r[1]:
+            if c in cuisine_to_names.keys():
+                cuisine_to_names[c].append(r[0])
+            else:
+                cuisine_to_names[c] = [r[0]]
+
+    return (name_to_rating, price_to_names, cuisine_to_names)
