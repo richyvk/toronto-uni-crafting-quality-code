@@ -38,7 +38,7 @@ would produce this list:
 FILENAME = 'restaurants.txt'
 
 
-def recommend(file=FILENAME, price, cuisines_list):
+def recommend(price, cuisines_list, file=FILENAME):
     """(file open for reading, str, list of str) -> list of [int, str] list
 
     Find restaurants in file that are priced according to price and that are
