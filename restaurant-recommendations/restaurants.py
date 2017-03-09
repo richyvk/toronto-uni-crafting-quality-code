@@ -88,7 +88,7 @@ def filter_by_cuisine(names_matching_price, cuisine_to_names, cuisines_list):
     """ (list of str, dict of {str: list of str}, list of str) -> list of str
 
     >>> names = ['Queen St. Cafe', 'Dumplings R Us', 'Deep Fried Everything']
-    >>> cuis = 'Canadian': ['Georgie Porgie'],
+    >>> cuis = {'Canadian': ['Georgie Porgie'],
      'Pub Food': ['Georgie Porgie', 'Deep Fried Everything'],
      'Malaysian': ['Queen St. Cafe'],
      'Thai': ['Queen St. Cafe'],
@@ -98,6 +98,20 @@ def filter_by_cuisine(names_matching_price, cuisine_to_names, cuisines_list):
     >>> filter_by_cuisine(names, cuis, cuisines)
     ['Queen St. Cafe', 'Dumplings R Us']
     """
+
+    # my solution is a list comprehension version of this:
+    # names_matching_cuisine = []
+
+    # for c in cuisines_list:
+    #     for n in names_matching_price:
+    #         if n in cuisine_to_names[c]:
+    #             names_matching_cuisine.append(n)
+
+    names_matching_cuisine = [name for name in names_matching_price
+                              for cuisine in cuisines_list
+                              if name in cuisine_to_names[c]]
+
+    return names_matching_cuisine
 
 
 def read_restaurants(file):
