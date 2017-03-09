@@ -35,10 +35,10 @@ would produce this list:
 """
 
 # The file containing the restaurant data.
-FILENAME = 'restaurants_small.txt'
+FILENAME = 'restaurants.txt'
 
 
-def recommend(file, price, cuisines_list):
+def recommend(file=FILENAME, price, cuisines_list):
     """(file open for reading, str, list of str) -> list of [int, str] list
 
     Find restaurants in file that are priced according to price and that are
@@ -52,16 +52,18 @@ def recommend(file, price, cuisines_list):
     # - a dict of {cusine: list of restaurant names}
     name_to_rating, price_to_names, cuisine_to_names = read_restaurants(file)
 
-
     # Look for price or cuisines first?
     # Price: look up the list of restaurant names for the requested price.
     names_matching_price = price_to_names[price]
 
     # Now we have a list of restaurants in the right price range.
     # Need a new list of restaurants that serve one of the cuisines.
-    names_final = filter_by_cuisine(names_matching_price, cuisine_to_names, cuisines_list)
+    names_final = filter_by_cuisine(names_matching_price,
+                                    cuisine_to_names,
+                                    cuisines_list)
 
-    # Now we have a list of restaurants that are in the right price range and serve the requested cuisine.
+    # Now we have a list of restaurants that are in the right price range and
+    # serve the requested cuisine.
     # Need to look at ratings and sort this list.
     result = build_rating_list(name_to_rating, names_final)
 
